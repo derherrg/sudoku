@@ -1,6 +1,7 @@
 from itertools import product
 from copy import deepcopy
 
+
 class Sudoku:
 
     def __init__(self, field):
@@ -38,12 +39,29 @@ class Sudoku:
 
         return [_ for _ in result if not _ == 0]
 
+    def is_faulty(self):
+        """
+        Check if the sudoku is faulty, i.e. if a number appears twice in
+        a row, column or square. Does NOT check if all entries in the field
+        are actually numbers. It's not your mom!
+        """
+        for x, y in product(range(9), range(9)):
+            if (len(self.in_row(x)) != len(set(self.in_row(x))) or
+               len(self.in_column(y)) != len(set(self.in_column(y))) or
+               len(self.in_square(x, y)) != len(set(self.in_square(x, y)))):
+                return True
+        return False
+
     def is_solved(self):
         """Checks if the sudoku is solved already."""
         return 0 not in [_ for row in self.field for _ in row]
 
     def solve(self):
         """Solve the sudoku!"""
+
+        if self.is_faulty():
+            print "Can't solve, given sudoku is faulty!"
+            return False
 
         # Remember the field with the least possible options
         # Format: [row, column, number of options, [options]]
@@ -95,7 +113,8 @@ class Sudoku:
 
                 # Modify the copied field and try to solve it
                 new_sudoku.field[x][y] = guess
-                new_sudoku.solve()
+                if not new_sudoku.is_faulty():
+                    new_sudoku.solve()
 
                 # If we could solve the new sudoku, we are done!
                 if new_sudoku.is_solved():
