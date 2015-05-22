@@ -5,7 +5,10 @@ from copy import deepcopy
 class Sudoku:
 
     def __init__(self, field):
-        """Initialize the class with the starting values"""
+        """
+        Initialize the class with the starting values.
+        'field' needs to be a list of 9 lists, each containing 9 numbers.
+        0 represents an empty box."""
         self.field = field
 
     def __str__(self):
